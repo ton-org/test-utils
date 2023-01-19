@@ -1,0 +1,31 @@
+{
+  "name": "@ton-community/test-utils",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "description": "Utilities for writing tests for smart contract systems in TON",
+  "author": "TonTech",
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "@jest/globals": "^29.3.1",
+    "@types/chai": "^4.3.4",
+    "chai": "^4.3.7",
+    "ton-core": "^0.45.0",
+    "typescript": "^4.9.4"
+  },
+  "peerDependencies": {
+    "@jest/globals": "*",
+    "chai": "*",
+    "ton-core": ">=0.36.1"
+  },
+  "peerDependenciesMeta": {
+    "@jest/globals": {
+      "optional": true
+    },
+    "chai": {
+      "optional": true
+    }
+  }
+}
