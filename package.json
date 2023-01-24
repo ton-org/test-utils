@@ -1,6 +1,6 @@
 {
   "name": "@ton-community/test-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "license": "MIT",
   "description": "Utilities for writing tests for smart contract systems in TON",
@@ -27,5 +27,11 @@
     "chai": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "node-inspect-extracted": "^2.0.0"
+  },
+  "scripts": {
+    "build": "rm -rf dist && yarn tsc"
   }
 }

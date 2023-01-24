@@ -1,4 +1,5 @@
 import { AccountStatus, Address, Cell, Transaction } from "ton-core";
+import { inspect } from "node-inspect-extracted";
 
 export type FlatTransaction = {
     from?: Address
@@ -93,16 +94,18 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
     negMessage: string
 } {
     if (Array.isArray(subject)) {
+        const arr = subject.map(tx => flattenTransaction(tx))
         return {
-            pass: subject.map(tx => flattenTransaction(tx)).some(ftx => compareTransaction(ftx, cmp)),
-            posMessage: `Expected ${subject} to contain a transaction that matches pattern ${cmp}`,
-            negMessage: `Expected ${subject} NOT to contain a transaction that matches pattern ${cmp}, but it does`,
+            pass: arr.some(ftx => compareTransaction(ftx, cmp)),
+            posMessage: `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`,
+            negMessage: `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`,
         }
     } else {
+        const flat = flattenTransaction(subject)
         return {
-            pass: compareTransaction(subject, cmp),
-            posMessage: `Expected ${subject} to match pattern ${cmp}`,
-            negMessage: `Expected ${subject} NOT to match pattern ${cmp}, but it does`,
+            pass: compareTransaction(flat, cmp),
+            posMessage: `Expected ${inspect(flat)} to match pattern ${inspect(cmp)}`,
+            negMessage: `Expected ${inspect(flat)} NOT to match pattern ${inspect(cmp)}, but it does`,
         }
     }
 }
