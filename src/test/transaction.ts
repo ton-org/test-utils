@@ -7,6 +7,7 @@ export type FlatTransaction = {
     on: Address
     value?: bigint
     body: Cell
+    op?: number
     initData?: Cell
     initCode?: Cell
     deploy: boolean
@@ -28,6 +29,15 @@ type WithFunctions<T> = {
 
 export type FlatTransactionComparable = Partial<WithFunctions<FlatTransaction>>
 
+function extractOp(body: Cell): number | undefined {
+    const s = body.beginParse()
+    if (s.remainingBits >= 32) {
+        return s.loadUint(32)
+    } else {
+        return undefined
+    }
+}
+
 export function flattenTransaction(tx: Transaction): FlatTransaction {
     return {
         from: tx.inMessage!.info.src instanceof Address ? tx.inMessage!.info.src : undefined,
@@ -35,6 +45,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
         on: tx.inMessage!.info.dest as Address,
         value: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.value.coins : undefined,
         body: tx.inMessage!.body,
+        op: extractOp(tx.inMessage!.body),
         initData: tx.inMessage!.init?.data ?? undefined,
         initCode: tx.inMessage!.init?.code ?? undefined,
         deploy: !!tx.inMessage!.init && tx.oldStatus !== 'active' && tx.endStatus === 'active',
