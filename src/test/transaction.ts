@@ -28,7 +28,7 @@ type WithFunctions<T> = {
 
 export type FlatTransactionComparable = Partial<WithFunctions<FlatTransaction>>
 
-function flattenTransaction(tx: Transaction): FlatTransaction {
+export function flattenTransaction(tx: Transaction): FlatTransaction {
     return {
         from: tx.inMessage!.info.src instanceof Address ? tx.inMessage!.info.src : undefined,
         to: tx.inMessage!.info.dest as Address,

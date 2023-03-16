@@ -2,6 +2,7 @@ export {
     FlatTransaction,
     FlatTransactionComparable,
     compareTransaction,
+    flattenTransaction,
 } from './test/transaction';
 
 import './test/jest';
