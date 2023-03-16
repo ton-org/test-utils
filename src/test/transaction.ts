@@ -4,6 +4,7 @@ import { inspect } from "node-inspect-extracted";
 export type FlatTransaction = {
     from?: Address
     to: Address
+    on: Address
     value?: bigint
     body: Cell
     initData?: Cell
@@ -31,6 +32,7 @@ function flattenTransaction(tx: Transaction): FlatTransaction {
     return {
         from: tx.inMessage!.info.src instanceof Address ? tx.inMessage!.info.src : undefined,
         to: tx.inMessage!.info.dest as Address,
+        on: tx.inMessage!.info.dest as Address,
         value: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.value.coins : undefined,
         body: tx.inMessage!.body,
         initData: tx.inMessage!.init?.data ?? undefined,
