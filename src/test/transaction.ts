@@ -107,8 +107,8 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
         const arr = subject.map(tx => flattenTransaction(tx))
         return {
             pass: arr.some(ftx => compareTransaction(ftx, cmp)),
-            posMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, subject, cmp),
-            negMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, subject, cmp),
+            posMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, arr, cmp),
+            negMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, arr, cmp),
         }
     } else {
         const flat = flattenTransaction(subject)
