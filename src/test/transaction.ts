@@ -1,5 +1,6 @@
 import { AccountStatus, Address, Cell, Transaction } from "ton-core";
 import { inspect } from "node-inspect-extracted";
+import { CompareResult } from "./interface";
 
 export type FlatTransaction = {
     from?: Address
@@ -101,24 +102,20 @@ export function compareTransaction(tx: FlatTransaction, cmp: FlatTransactionComp
     return true
 }
 
-export function compareTransactionForTest(subject: any, cmp: FlatTransactionComparable): {
-    pass: boolean
-    posMessage: string
-    negMessage: string
-} {
+export function compareTransactionForTest(subject: any, cmp: FlatTransactionComparable): CompareResult {
     if (Array.isArray(subject)) {
         const arr = subject.map(tx => flattenTransaction(tx))
         return {
             pass: arr.some(ftx => compareTransaction(ftx, cmp)),
-            posMessage: `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`,
-            negMessage: `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`,
+            posMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, subject, cmp),
+            negMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, subject, cmp),
         }
     } else {
         const flat = flattenTransaction(subject)
         return {
             pass: compareTransaction(flat, cmp),
-            posMessage: `Expected ${inspect(flat)} to match pattern ${inspect(cmp)}`,
-            negMessage: `Expected ${inspect(flat)} NOT to match pattern ${inspect(cmp)}, but it does`,
+            posMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} to match pattern ${inspect(cmp)}`).bind(undefined, flat, cmp),
+            negMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} NOT to match pattern ${inspect(cmp)}, but it does`).bind(undefined, flat, cmp),
         }
     }
 }

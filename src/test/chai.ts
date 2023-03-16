@@ -1,10 +1,15 @@
+import { CompareResult } from "./interface";
 import { compareTransactionForTest, FlatTransactionComparable } from "./transaction";
 
+function wrapComparer<T>(comparer: (subject: any, cmp: T) => CompareResult) {
+    return function (this: any, cmp: T) {
+        const result = comparer(this._obj, cmp)
+        this.assert(result.pass, result.posMessage(), result.negMessage())
+    }
+}
+
 function supportTransaction(Assertion: Chai.AssertionStatic) {
-    Assertion.addMethod('transaction', function (this: any, cmp: FlatTransactionComparable) {
-        const result = compareTransactionForTest(this._obj, cmp)
-        this.assert(result.pass, result.posMessage, result.negMessage)
-    })
+    Assertion.addMethod('transaction', wrapComparer(compareTransactionForTest))
 }
 
 try {

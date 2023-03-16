@@ -1,13 +1,24 @@
 import { FlatTransactionComparable, compareTransactionForTest } from "./transaction";
 import type { MatcherFunction } from "expect";
+import { CompareResult } from "./interface";
 
-const toHaveTransaction: MatcherFunction<[cmp: FlatTransactionComparable]> = function(actual, cmp) {
-    const result = compareTransactionForTest(actual, cmp)
-    return {
-        pass: result.pass,
-        message: () => result.pass ? result.negMessage : result.posMessage,
+function wrapComparer<T>(comparer: (subject: any, cmp: T) => CompareResult): MatcherFunction<[cmp: T]> {
+    return function(actual, cmp) {
+        const result = comparer(actual, cmp)
+        return {
+            pass: result.pass,
+            message: () => {
+                if (result.pass) {
+                    return result.negMessage()
+                } else {
+                    return result.posMessage()
+                }
+            },
+        }
     }
 }
+
+const toHaveTransaction = wrapComparer(compareTransactionForTest)
 
 try {
     const jestGlobals = require("@jest/globals");
