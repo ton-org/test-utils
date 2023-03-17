@@ -8,6 +8,10 @@
   "files": [
     "dist/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ton-community/test-utils"
+  },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "@types/chai": "^4.3.4",
