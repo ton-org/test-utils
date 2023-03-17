@@ -36,6 +36,6 @@
     "node-inspect-extracted": "^2.0.0"
   },
   "scripts": {
-    "build": "rm -rf dist && yarn tsc"
+    "build": "rm -rf dist && jest && tsc"
   }
 }
