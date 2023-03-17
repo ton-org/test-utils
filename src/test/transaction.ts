@@ -8,6 +8,8 @@ export type FlatTransaction = {
     on: Address
     value?: bigint
     body: Cell
+    inMessageBounced?: boolean
+    inMessageBounceable?: boolean
     op?: number
     initData?: Cell
     initCode?: Cell
@@ -21,6 +23,7 @@ export type FlatTransaction = {
     aborted?: boolean
     destroyed?: boolean
     exitCode?: number
+    actionResultCode?: number
     success?: boolean
 }
 
@@ -46,6 +49,8 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
         on: tx.inMessage!.info.dest as Address,
         value: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.value.coins : undefined,
         body: tx.inMessage!.body,
+        inMessageBounced: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.bounced : undefined,
+        inMessageBounceable: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.bounce : undefined,
         op: extractOp(tx.inMessage!.body),
         initData: tx.inMessage!.init?.data ?? undefined,
         initCode: tx.inMessage!.init?.code ?? undefined,
@@ -60,6 +65,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
             aborted: tx.description.aborted,
             destroyed: tx.description.destroyed,
             exitCode: tx.description.computePhase.type === 'vm' ? tx.description.computePhase.exitCode : undefined,
+            actionResultCode: tx.description.actionPhase?.resultCode,
             success: tx.description.computePhase.type === 'vm'
                 ? (tx.description.computePhase.success && tx.description.actionPhase?.success)
                 : false,
@@ -67,6 +73,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
             aborted: undefined,
             destroyed: undefined,
             exitCode: undefined,
+            actionResultCode: undefined,
             success: undefined,
         }),
     }
