@@ -5,18 +5,18 @@ This package contains useful testing utilities, such as unit test matchers (for 
 ## Installation
 
 ```
-yarn add @ton-community/test-utils -D
+yarn add @ton/test-utils -D
 ```
 or
 ```
-npm i --save-dev @ton-community/test-utils
+npm i --save-dev @ton/test-utils
 ```
 
 ## Usage
 
 To use the test matchers, just install either jest or chai and import this package like so:
 ```typescript
-import "@ton-community/test-utils";
+import "@ton/test-utils";
 ```
 
 ## License
