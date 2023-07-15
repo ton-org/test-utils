@@ -1,4 +1,4 @@
-import { AccountStatus, Address, Cell, Transaction } from "ton-core";
+import { AccountStatus, Address, Cell, Transaction } from "@ton/core";
 import { inspect } from "node-inspect-extracted";
 import { CompareResult } from "./interface";
 

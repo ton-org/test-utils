@@ -2,7 +2,7 @@ import { FlatTransactionComparable, compareTransactionForTest } from "./transact
 import type { MatcherFunction } from "expect";
 import { CompareResult } from "./interface";
 import { compareAddressForTest, compareCellForTest, compareSliceForTest } from "./comparisons";
-import { Address, Cell, Slice } from "ton-core";
+import { Address, Cell, Slice } from "@ton/core";
 
 function wrapComparer<T>(comparer: (subject: any, cmp: T) => CompareResult): MatcherFunction<[cmp: T]> {
     return function(actual, cmp) {

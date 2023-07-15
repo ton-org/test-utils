@@ -1,4 +1,4 @@
-import { Address, Cell, Slice } from "ton-core";
+import { Address, Cell, Slice } from "@ton/core";
 import { compareAddressForTest, compareCellForTest, compareSliceForTest } from "./comparisons";
 import { CompareResult } from "./interface";
 import { compareTransactionForTest, FlatTransactionComparable } from "./transaction";
