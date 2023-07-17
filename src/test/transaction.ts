@@ -111,13 +111,16 @@ export function compareTransaction(tx: FlatTransaction, cmp: FlatTransactionComp
 
 export function compareTransactionForTest(subject: any, cmp: FlatTransactionComparable): CompareResult {
     if (Array.isArray(subject)) {
-        const arr = subject.map(tx => flattenTransaction(tx))
+        const arr = (subject as Transaction[]).filter(tx => tx.description.type === 'generic').map(tx => flattenTransaction(tx))
         return {
             pass: arr.some(ftx => compareTransaction(ftx, cmp)),
             posMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, arr, cmp),
             negMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, arr, cmp),
         }
     } else {
+        if ((subject as Transaction).description.type !== 'generic') {
+            throw new Error('Transaction matching can only be done on generic transactions')
+        }
         const flat = flattenTransaction(subject)
         return {
             pass: compareTransaction(flat, cmp),
