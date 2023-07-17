@@ -19,6 +19,10 @@ To use the test matchers, just install either jest or chai and import this packa
 import "@ton-community/test-utils";
 ```
 
+### Transaction matcher notice
+
+The transaction matcher (`.toHaveTransaction`) can only perform matching on transactions with descriptions of type `generic`. When matching an array of transactions, all transactions of other types will be filtered out. When matching a single transaction of non-generic type, an exception will be thrown.
+
 ## License
 
 This package is released under the [MIT License](LICENSE).
