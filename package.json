@@ -1,6 +1,6 @@
 {
   "name": "@ton/test-utils",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "main": "dist/index.js",
   "license": "MIT",
   "description": "Utilities for writing tests for smart contract systems in TON",
@@ -41,5 +41,6 @@
   },
   "scripts": {
     "build": "rm -rf dist && jest && tsc"
-  }
+  },
+  "packageManager": "yarn@3.6.1"
 }
