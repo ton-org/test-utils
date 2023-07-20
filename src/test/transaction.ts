@@ -1,4 +1,4 @@
-import { AccountStatus, Address, Cell, Transaction } from "ton-core";
+import { AccountStatus, Address, Cell, Transaction } from "@ton/core";
 import { inspect } from "node-inspect-extracted";
 import { CompareResult } from "./interface";
 
@@ -111,18 +111,28 @@ export function compareTransaction(tx: FlatTransaction, cmp: FlatTransactionComp
 
 export function compareTransactionForTest(subject: any, cmp: FlatTransactionComparable): CompareResult {
     if (Array.isArray(subject)) {
-        const arr = subject.map(tx => flattenTransaction(tx))
+        const arr = (subject as Transaction[]).filter(tx => tx.description.type === 'generic').map(tx => flattenTransaction(tx))
         return {
             pass: arr.some(ftx => compareTransaction(ftx, cmp)),
             posMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, arr, cmp),
             negMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, arr, cmp),
         }
     } else {
-        const flat = flattenTransaction(subject)
-        return {
-            pass: compareTransaction(flat, cmp),
-            posMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} to match pattern ${inspect(cmp)}`).bind(undefined, flat, cmp),
-            negMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} NOT to match pattern ${inspect(cmp)}, but it does`).bind(undefined, flat, cmp),
+        try {
+            if ((subject as Transaction).description.type !== 'generic') {
+                throw new Error('Transaction matching can only be done on generic transactions')
+            }
+            const flat = flattenTransaction(subject)
+            return {
+                pass: compareTransaction(flat, cmp),
+                posMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} to match pattern ${inspect(cmp)}`).bind(undefined, flat, cmp),
+                negMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} NOT to match pattern ${inspect(cmp)}, but it does`).bind(undefined, flat, cmp),
+            }
+        } catch (e) {
+            if (subject.transactions !== undefined) {
+                console.warn('It seems that a SendMessageResult is being used for this comparison. Please make sure to pass `result.transactions` instead of just `result` into the matcher.');
+            }
+            throw e;
         }
     }
 }

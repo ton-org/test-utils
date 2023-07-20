@@ -1,4 +1,4 @@
-import { Address, beginCell } from "ton-core";
+import { Address, beginCell } from "@ton/core";
 import { compareAddressForTest, compareCellForTest, compareSliceForTest } from "./comparisons";
 
 describe('Cell comparison', () => {
