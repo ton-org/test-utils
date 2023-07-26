@@ -25,7 +25,7 @@ jobs:
           yarn config set npmAuthToken $NPM_AUTH_TOKEN
           yarn config set npmAlwaysAuth true
         env:
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - name: Publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
