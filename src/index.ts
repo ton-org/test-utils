@@ -3,6 +3,8 @@ export {
     FlatTransactionComparable,
     compareTransaction,
     flattenTransaction,
+    findTransaction,
+    filterTransactions,
 } from './test/transaction';
 
 import './test/jest';
