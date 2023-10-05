@@ -4,10 +4,10 @@ import { CompareResult } from "./interface";
 
 export type FlatTransaction = {
     from?: Address
-    to: Address
-    on: Address
+    to?: Address
+    on?: Address
     value?: bigint
-    body: Cell
+    body?: Cell
     inMessageBounced?: boolean
     inMessageBounceable?: boolean
     op?: number
@@ -44,24 +44,42 @@ function extractOp(body: Cell): number | undefined {
 
 export function flattenTransaction(tx: Transaction): FlatTransaction {
     return {
-        from: tx.inMessage!.info.src instanceof Address ? tx.inMessage!.info.src : undefined,
-        to: tx.inMessage!.info.dest as Address,
-        on: tx.inMessage!.info.dest as Address,
-        value: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.value.coins : undefined,
-        body: tx.inMessage!.body,
-        inMessageBounced: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.bounced : undefined,
-        inMessageBounceable: tx.inMessage!.info.type === 'internal' ? tx.inMessage!.info.bounce : undefined,
-        op: extractOp(tx.inMessage!.body),
-        initData: tx.inMessage!.init?.data ?? undefined,
-        initCode: tx.inMessage!.init?.code ?? undefined,
-        deploy: !!tx.inMessage!.init && tx.oldStatus !== 'active' && tx.endStatus === 'active',
         lt: tx.lt,
         now: tx.now,
         outMessagesCount: tx.outMessagesCount,
         oldStatus: tx.oldStatus,
         endStatus: tx.endStatus,
         totalFees: tx.totalFees.coins,
-        ...(tx.description.type === 'generic' ? {
+        ...(tx.inMessage ? {
+            from: tx.inMessage.info.src instanceof Address ? tx.inMessage.info.src : undefined,
+            to: tx.inMessage.info.dest as Address,
+            on: tx.inMessage.info.dest as Address,
+            value: tx.inMessage.info.type === 'internal' ? tx.inMessage.info.value.coins : undefined,
+            body: tx.inMessage.body,
+            inMessageBounced: tx.inMessage.info.type === 'internal' ? tx.inMessage.info.bounced : undefined,
+            inMessageBounceable: tx.inMessage.info.type === 'internal' ? tx.inMessage.info.bounce : undefined,
+            op: extractOp(tx.inMessage.body),
+            initData: tx.inMessage.init?.data ?? undefined,
+            initCode: tx.inMessage.init?.code ?? undefined,
+            deploy: tx.inMessage.init ? (tx.oldStatus == 'active' && tx.endStatus === 'active') : false,
+        } : {
+            from: undefined,
+            to: undefined,
+            on: undefined,
+            value: undefined,
+            body: undefined,
+            inMessageBounced: undefined,
+            inMessageBounceable: undefined,
+            op: undefined,
+            initData: undefined,
+            initCode: undefined,
+            deploy: false,
+        }),
+        ...(tx.description.type === 'generic'
+            || tx.description.type === 'tick-tock'
+            || tx.description.type === 'split-prepare'
+            || tx.description.type === 'merge-install'
+            ? {
             aborted: tx.description.aborted,
             destroyed: tx.description.destroyed,
             exitCode: tx.description.computePhase.type === 'vm' ? tx.description.computePhase.exitCode : undefined,
@@ -111,7 +129,7 @@ export function compareTransaction(tx: FlatTransaction, cmp: FlatTransactionComp
 
 export function compareTransactionForTest(subject: any, cmp: FlatTransactionComparable): CompareResult {
     if (Array.isArray(subject)) {
-        const arr = (subject as Transaction[]).filter(tx => tx.description.type === 'generic').map(tx => flattenTransaction(tx))
+        const arr = (subject as Transaction[]).map(tx => flattenTransaction(tx))
         return {
             pass: arr.some(ftx => compareTransaction(ftx, cmp)),
             posMessage: ((arr: any, cmp: FlatTransactionComparable) => `Expected ${inspect(arr)} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, arr, cmp),
@@ -119,9 +137,6 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
         }
     } else {
         try {
-            if ((subject as Transaction).description.type !== 'generic') {
-                throw new Error('Transaction matching can only be done on generic transactions')
-            }
             const flat = flattenTransaction(subject)
             return {
                 pass: compareTransaction(flat, cmp),
