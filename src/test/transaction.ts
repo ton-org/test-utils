@@ -137,20 +137,24 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
     }
 }
 
-export const findTransaction = <T extends Transaction>(txs: T | T[], match: FlatTransactionComparable, required:boolean = true) => {
-    let res: T | undefined
-    if(Array.isArray(txs)) {
-        res = txs.find(x => compareTransaction(flattenTransaction(x), match))
+export function findTransaction<T extends Transaction>(txs: T | T[], match: FlatTransactionComparable) {
+    let res: T | undefined;
+    if (Array.isArray(txs)) {
+        res = txs.find(x => compareTransaction(flattenTransaction(x), match));
+    } else {
+        res = compareTransaction(flattenTransaction(txs), match) ? txs : undefined;
     }
-    else {
-        res = compareTransaction(flattenTransaction(txs), match) ? txs : undefined
-    }
-    if(required && res === undefined) {
-        throw(Error(`Expected ${inspect(Array.isArray(txs) ? txs.map(x => flattenTransaction(x)) : txs)} to contain a transaction that matches pattern ${inspect(match)}`))
-    }
-    return res
+    return res;
 }
 
-export const filterTransactions = <T extends Transaction> (txs: T[], match: FlatTransactionComparable) => {
-    return txs.filter(x => compareTransaction(flattenTransaction(x), match))
+export function findTransactionRequired<T extends Transaction>(txs: T | T[], match: FlatTransactionComparable) {
+    const res = findTransaction(txs, match);
+    if (res === undefined) {
+        throw new Error(`Expected ${inspect(Array.isArray(txs) ? txs.map(x => flattenTransaction(x)) : flattenTransaction(txs))} to contain a transaction that matches pattern ${inspect(match)}`);
+    }
+    return res;
+}
+
+export function filterTransactions<T extends Transaction>(txs: T[], match: FlatTransactionComparable) {
+    return txs.filter(x => compareTransaction(flattenTransaction(x), match));
 }
