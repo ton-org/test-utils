@@ -150,3 +150,25 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
         }
     }
 }
+
+export function findTransaction<T extends Transaction>(txs: T | T[], match: FlatTransactionComparable) {
+    let res: T | undefined;
+    if (Array.isArray(txs)) {
+        res = txs.find(x => compareTransaction(flattenTransaction(x), match));
+    } else {
+        res = compareTransaction(flattenTransaction(txs), match) ? txs : undefined;
+    }
+    return res;
+}
+
+export function findTransactionRequired<T extends Transaction>(txs: T | T[], match: FlatTransactionComparable) {
+    const res = findTransaction(txs, match);
+    if (res === undefined) {
+        throw new Error(`Expected ${inspect(Array.isArray(txs) ? txs.map(x => flattenTransaction(x)) : flattenTransaction(txs))} to contain a transaction that matches pattern ${inspect(match)}`);
+    }
+    return res;
+}
+
+export function filterTransactions<T extends Transaction>(txs: T[], match: FlatTransactionComparable) {
+    return txs.filter(x => compareTransaction(flattenTransaction(x), match));
+}
