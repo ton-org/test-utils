@@ -4,6 +4,7 @@ export {
     compareTransaction,
     flattenTransaction,
     findTransaction,
+    findTransactionRequired,
     filterTransactions,
 } from './test/transaction';
 
