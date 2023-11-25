@@ -61,7 +61,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
             op: extractOp(tx.inMessage.body),
             initData: tx.inMessage.init?.data ?? undefined,
             initCode: tx.inMessage.init?.code ?? undefined,
-            deploy: tx.inMessage.init ? (tx.oldStatus == 'active' && tx.endStatus === 'active') : false,
+            deploy: tx.inMessage.init ? (tx.oldStatus !== 'active' && tx.endStatus === 'active') : false,
         } : {
             from: undefined,
             to: undefined,
