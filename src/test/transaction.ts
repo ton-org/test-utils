@@ -1,4 +1,4 @@
-import { AccountStatus, Address, Cell, Transaction } from "@ton/core";
+import { AccountStatus, Address, Cell, CurrencyCollection, Transaction } from "@ton/core";
 import { inspect } from "node-inspect-extracted";
 import { CompareResult } from "./interface";
 
@@ -7,6 +7,7 @@ export type FlatTransaction = {
     to?: Address
     on?: Address
     value?: bigint
+    ec?: [number, bigint][]
     body?: Cell
     inMessageBounced?: boolean
     inMessageBounceable?: boolean
@@ -42,6 +43,15 @@ function extractOp(body: Cell): number | undefined {
     }
 }
 
+function extractEc(cc: CurrencyCollection): [number, bigint][] {
+    const r: [number, bigint][] = [];
+    for (const [k, v] of cc.other ?? []) {
+        r.push([k, v]);
+    }
+    r.sort((a, b) => a[0] - b[0]);
+    return r;
+}
+
 export function flattenTransaction(tx: Transaction): FlatTransaction {
     return {
         lt: tx.lt,
@@ -55,6 +65,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
             to: tx.inMessage.info.dest as Address,
             on: tx.inMessage.info.dest as Address,
             value: tx.inMessage.info.type === 'internal' ? tx.inMessage.info.value.coins : undefined,
+            ec: tx.inMessage.info.type === 'internal' ? extractEc(tx.inMessage.info.value) : undefined,
             body: tx.inMessage.body,
             inMessageBounced: tx.inMessage.info.type === 'internal' ? tx.inMessage.info.bounced : undefined,
             inMessageBounceable: tx.inMessage.info.type === 'internal' ? tx.inMessage.info.bounce : undefined,
@@ -67,6 +78,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
             to: undefined,
             on: undefined,
             value: undefined,
+            ec: undefined,
             body: undefined,
             inMessageBounced: undefined,
             inMessageBounceable: undefined,
@@ -106,6 +118,15 @@ function compareValue(a: any, b: any) {
     if (a instanceof Cell) {
         if (!(b instanceof Cell)) return false
         return a.equals(b)
+    }
+
+    if (a instanceof Array) {
+        if (!(b instanceof Array)) return false
+        if (a.length !== b.length) return false
+        for (let i = 0; i < a.length; i++) {
+            if (!compareValue(a[i], b[i])) return false
+        }
+        return true
     }
 
     return a === b
