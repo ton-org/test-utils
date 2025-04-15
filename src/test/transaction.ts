@@ -1,6 +1,11 @@
 import { AccountStatus, Address, Cell, CurrencyCollection, Transaction } from "@ton/core";
 import { inspect } from "node-inspect-extracted";
 import { CompareResult } from "./interface";
+import errors from "../errors.json";
+
+export type FailReason = {
+    description: string;
+}
 
 export type FlatTransaction = {
     from?: Address
@@ -28,6 +33,16 @@ export type FlatTransaction = {
     success?: boolean
 }
 
+const typedErrors: Partial<Record<string, FailReason>> = errors;
+
+export function extractFailReason(tx: FlatTransaction): FailReason | undefined {
+    if (tx.success) {
+        return;
+    }
+
+    return typedErrors[String(tx.exitCode)] ?? typedErrors[String(tx.actionResultCode)];
+}
+
 type WithFunctions<T> = {
     [K in keyof T]: T[K] | ((x: T[K]) => boolean)
 }
@@ -50,6 +65,19 @@ function extractEc(cc: CurrencyCollection): [number, bigint][] {
     }
     r.sort((a, b) => a[0] - b[0]);
     return r;
+}
+
+export type PrettyTransaction = FlatTransaction & {
+    failReason?: FailReason;
+}
+
+export function prettifyTransaction(tx: Transaction): PrettyTransaction {
+    const flatTx = flattenTransaction(tx);
+    const failReason = extractFailReason(flatTx);
+    return {
+        ...flatTx,
+        failReason,
+    }
 }
 
 export function flattenTransaction(tx: Transaction): FlatTransaction {
@@ -152,16 +180,15 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
     if (Array.isArray(subject)) {
         return {
             pass: subject.some(tx => compareTransaction(flattenTransaction(tx), cmp)),
-            posMessage: ((subj: any[], cmp: FlatTransactionComparable) => `Expected ${inspect(subj.map(tx => flattenTransaction(tx)))} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, subject, cmp),
-            negMessage: ((subj: any[], cmp: FlatTransactionComparable) => `Expected ${inspect(subj.map(tx => flattenTransaction(tx)))} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, subject, cmp),
+            posMessage: ((subj: any[], cmp: FlatTransactionComparable) => `Expected ${inspect(subj.map(tx => prettifyTransaction(tx)))} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(undefined, subject, cmp),
+            negMessage: ((subj: any[], cmp: FlatTransactionComparable) => `Expected ${inspect(subj.map(tx => prettifyTransaction(tx)))} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(undefined, subject, cmp),
         }
     } else {
         try {
-            const flat = flattenTransaction(subject)
             return {
-                pass: compareTransaction(flat, cmp),
-                posMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} to match pattern ${inspect(cmp)}`).bind(undefined, flat, cmp),
-                negMessage: ((flat: any, cmp: FlatTransactionComparable) => `Expected ${inspect(flat)} NOT to match pattern ${inspect(cmp)}, but it does`).bind(undefined, flat, cmp),
+                pass: compareTransaction(flattenTransaction(subject), cmp),
+                posMessage: ((subj: any, cmp: FlatTransactionComparable) => `Expected ${inspect(prettifyTransaction(subj))} to match pattern ${inspect(cmp)}`).bind(undefined, subject, cmp),
+                negMessage: ((subj: any, cmp: FlatTransactionComparable) => `Expected ${inspect(prettifyTransaction(subj))} NOT to match pattern ${inspect(cmp)}, but it does`).bind(undefined, subject, cmp),
             }
         } catch (e) {
             if (subject.transactions !== undefined) {
