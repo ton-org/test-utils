@@ -6,6 +6,8 @@ export {
     findTransaction,
     findTransactionRequired,
     filterTransactions,
+    prettifyTransaction,
+    PrettyTransaction,
 } from './test/transaction';
 
 import './test/jest';
