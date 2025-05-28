@@ -6,12 +6,20 @@ export {
     findTransaction,
     findTransactionRequired,
     filterTransactions,
-    prettifyTransaction,
-    PrettyTransaction,
 } from './test/transaction';
+
+export {
+    contractsMeta,
+    ContractsMeta,
+} from './utils/ContractsMeta';
 
 import './test/jest';
 import './test/chai';
+
+export {
+    prettifyTransaction,
+    PrettyTransaction
+} from './utils/pretty-transaction';
 
 export {
     randomAddress,
