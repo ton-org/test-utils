@@ -21,3 +21,8 @@ export {
     executeTill,
     executeFrom,
 } from './utils/stepByStep';
+
+export {
+    fetchConfig,
+    setGlobalVersion,
+} from './utils/config';
