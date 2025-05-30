@@ -55,7 +55,7 @@ function extractEc(cc: CurrencyCollection): [number, bigint][] {
 
 
 export function flattenTransaction(tx: Transaction): FlatTransaction {
-    tx.stateUpdate
+
     return {
         lt: tx.lt,
         now: tx.now,

@@ -9,13 +9,25 @@ export type ContractMeta = {
 export class ContractsMeta {
     protected contractsMeta = new Map<string, ContractMeta>();
 
+    private addressToKey(address: Address) {
+        return address.toString();
+    }
+
     get(key: Address) {
-        return this.contractsMeta.get(key.toString());
+        return this.contractsMeta.get(this.addressToKey(key));
     }
 
     upsert(key: Address, value: Partial<ContractMeta>) {
-        const oldValue = this.contractsMeta.get(key.toString());
-        this.contractsMeta.set(key.toString(), {...(oldValue ?? {}), ...value});
+        const oldValue = this.contractsMeta.get(this.addressToKey(key));
+        this.contractsMeta.set(this.addressToKey(key), {...(oldValue ?? {}), ...value});
+    }
+
+    clear() {
+        this.contractsMeta.clear();
+    }
+
+    delete(key: Address) {
+        this.contractsMeta.delete(this.addressToKey(key));
     }
 }
 

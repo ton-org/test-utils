@@ -3,7 +3,6 @@ import { flattenTransaction, FlatTransaction } from "../test/transaction";
 import { contractsMeta } from "./ContractsMeta";
 import { Address, Transaction } from "@ton/core";
 
-
 type PrettifiedProps = {
     failReason?: FailReason;
     from?: string
@@ -18,16 +17,15 @@ export type FailReason = {
     message: string;
 }
 
-const typedErrors: Partial<Record<string, FailReason>> = errors;
+const typedErrors: Record<string, FailReason> = errors;
 
-
-function extractError(tx: FlatTransaction, errors: Partial<Record<string, FailReason>> | undefined | null) {
-    return errors?.[String(tx.exitCode)] || errors?.[String(tx.actionResultCode)];
+function extractError(tx: FlatTransaction, errors: Record<string, FailReason> | undefined | null) {
+    return errors?.[String(tx.exitCode)] ?? errors?.[String(tx.actionResultCode)];
 }
 
 export function extractFailReason(tx: FlatTransaction): FailReason | undefined {
     if (tx.success) {
-        return;
+        return undefined;
     }
 
     const destination = tx.to;
@@ -40,8 +38,8 @@ export function extractFailReason(tx: FlatTransaction): FailReason | undefined {
 }
 
 function prettifyOpcode(address: Address | undefined, op: number | undefined): string | undefined {
-    if (!address || !op) {
-        return;
+    if (!address || op === undefined) {
+        return op?.toString();
     }
 
     const meta = contractsMeta.get(address);
@@ -69,9 +67,13 @@ function prettifyAddress(address: Address | undefined): string | undefined {
         return address.toString();
     }
 
-    let contractLabel = meta.abi?.name || meta.wrapperName;
+    let contractLabel = meta.abi?.name ?? meta.wrapperName;
     if (meta.treasurySeed) {
-        contractLabel += `-${meta.treasurySeed}`;
+        contractLabel = contractLabel === undefined ? meta.treasurySeed : `${contractLabel}-${meta.treasurySeed}`;
+    }
+
+    if (contractLabel === undefined) {
+        return address.toString();
     }
 
     return `${address.toString()} (${contractLabel})`;
