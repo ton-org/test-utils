@@ -1,115 +1,115 @@
 {
   "2": {
-    "description": "Stack underflow"
+    "message": "Stack underflow"
   },
   "3": {
-    "description": "Stack overflow"
+    "message": "Stack overflow"
   },
   "4": {
-    "description": "Integer overflow"
+    "message": "Integer overflow"
   },
   "5": {
-    "description": "Integer out of expected range"
+    "message": "Integer out of expected range"
   },
   "6": {
-    "description": "Invalid opcode"
+    "message": "Invalid opcode"
   },
   "7": {
-    "description": "Type check error"
+    "message": "Type check error"
   },
   "8": {
-    "description": "Cell overflow"
+    "message": "Cell overflow"
   },
   "9": {
-    "description": "Cell underflow"
+    "message": "Cell underflow"
   },
   "10": {
-    "description": "Dictionary error"
+    "message": "Dictionary error"
   },
   "11": {
-    "description": "'Unknown' error"
+    "message": "'Unknown' error"
   },
   "12": {
-    "description": "Fatal error"
+    "message": "Fatal error"
   },
   "13": {
-    "description": "Out of gas error"
+    "message": "Out of gas error"
   },
   "14": {
-    "description": "Virtualization error"
+    "message": "Virtualization error"
   },
   "32": {
-    "description": "Action list is invalid"
+    "message": "Action list is invalid"
   },
   "33": {
-    "description": "Action list is too long"
+    "message": "Action list is too long"
   },
   "34": {
-    "description": "Action is invalid or not supported"
+    "message": "Action is invalid or not supported"
   },
   "35": {
-    "description": "Invalid source address in outbound description"
+    "message": "Invalid source address in outbound description"
   },
   "36": {
-    "description": "Invalid destination address in outbound message"
+    "message": "Invalid destination address in outbound message"
   },
   "37": {
-    "description": "Not enough Toncoin"
+    "message": "Not enough Toncoin"
   },
   "38": {
-    "description": "Not enough extra currencies"
+    "message": "Not enough extra currencies"
   },
   "39": {
-    "description": "Outbound message does not fit into a cell after rewriting"
+    "message": "Outbound message does not fit into a cell after rewriting"
   },
   "40": {
-    "description": "Cannot process a message"
+    "message": "Cannot process a message"
   },
   "41": {
-    "description": "Library reference is null"
+    "message": "Library reference is null"
   },
   "42": {
-    "description": "Library change action error"
+    "message": "Library change action error"
   },
   "43": {
-    "description": "Exceeded maximum number of cells in the library or the maximum depth of the Merkle tree"
+    "message": "Exceeded maximum number of cells in the library or the maximum depth of the Merkle tree"
   },
   "50": {
-    "description": "Account state size exceeded limits"
+    "message": "Account state size exceeded limits"
   },
 
   "128": {
-    "description": "Null reference exception"
+    "message": "Null reference exception"
   },
   "129": {
-    "description": "Invalid serialization prefix"
+    "message": "Invalid serialization prefix"
   },
   "130": {
-    "description": "Invalid incoming message"
+    "message": "Invalid incoming message"
   },
   "131": {
-    "description": "Constraints error"
+    "message": "Constraints error"
   },
   "132": {
-    "description": "Access denied"
+    "message": "Access denied"
   },
   "133": {
-    "description": "Contract stopped"
+    "message": "Contract stopped"
   },
   "134": {
-    "description": "Invalid argument"
+    "message": "Invalid argument"
   },
   "135": {
-    "description": "Code of a contract was not found"
+    "message": "Code of a contract was not found"
   },
   "136": {
-    "description": "Invalid standard address"
+    "message": "Invalid standard address"
   },
   "138": {
-    "description": "Not a basechain address"
+    "message": "Not a basechain address"
   },
 
   "65535": {
-    "description": "Unrecognized message opcode"
+    "message": "Unrecognized message opcode"
   }
 }

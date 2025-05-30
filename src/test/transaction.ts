@@ -1,11 +1,7 @@
 import { AccountStatus, Address, Cell, CurrencyCollection, Transaction } from "@ton/core";
 import { inspect } from "node-inspect-extracted";
 import { CompareResult } from "./interface";
-import errors from "../errors.json";
-
-export type FailReason = {
-    description: string;
-}
+import { prettifyTransaction } from "../utils/pretty-transaction";
 
 export type FlatTransaction = {
     from?: Address
@@ -33,16 +29,6 @@ export type FlatTransaction = {
     success?: boolean
 }
 
-const typedErrors: Partial<Record<string, FailReason>> = errors;
-
-export function extractFailReason(tx: FlatTransaction): FailReason | undefined {
-    if (tx.success) {
-        return;
-    }
-
-    return typedErrors[String(tx.exitCode)] ?? typedErrors[String(tx.actionResultCode)];
-}
-
 type WithFunctions<T> = {
     [K in keyof T]: T[K] | ((x: T[K]) => boolean)
 }
@@ -67,20 +53,9 @@ function extractEc(cc: CurrencyCollection): [number, bigint][] {
     return r;
 }
 
-export type PrettyTransaction = FlatTransaction & {
-    failReason?: FailReason;
-}
-
-export function prettifyTransaction(tx: Transaction): PrettyTransaction {
-    const flatTx = flattenTransaction(tx);
-    const failReason = extractFailReason(flatTx);
-    return {
-        ...flatTx,
-        failReason,
-    }
-}
 
 export function flattenTransaction(tx: Transaction): FlatTransaction {
+
     return {
         lt: tx.lt,
         now: tx.now,
@@ -116,24 +91,24 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
             deploy: false,
         }),
         ...(tx.description.type === 'generic'
-            || tx.description.type === 'tick-tock'
-            || tx.description.type === 'split-prepare'
-            || tx.description.type === 'merge-install'
+        || tx.description.type === 'tick-tock'
+        || tx.description.type === 'split-prepare'
+        || tx.description.type === 'merge-install'
             ? {
-            aborted: tx.description.aborted,
-            destroyed: tx.description.destroyed,
-            exitCode: tx.description.computePhase.type === 'vm' ? tx.description.computePhase.exitCode : undefined,
-            actionResultCode: tx.description.actionPhase?.resultCode,
-            success: tx.description.computePhase.type === 'vm'
-                ? (tx.description.computePhase.success && tx.description.actionPhase?.success)
-                : false,
-        } : {
-            aborted: undefined,
-            destroyed: undefined,
-            exitCode: undefined,
-            actionResultCode: undefined,
-            success: undefined,
-        }),
+                aborted: tx.description.aborted,
+                destroyed: tx.description.destroyed,
+                exitCode: tx.description.computePhase.type === 'vm' ? tx.description.computePhase.exitCode : undefined,
+                actionResultCode: tx.description.actionPhase?.resultCode,
+                success: tx.description.computePhase.type === 'vm'
+                    ? (tx.description.computePhase.success && tx.description.actionPhase?.success)
+                    : false,
+            } : {
+                aborted: undefined,
+                destroyed: undefined,
+                exitCode: undefined,
+                actionResultCode: undefined,
+                success: undefined,
+            }),
     }
 }
 
