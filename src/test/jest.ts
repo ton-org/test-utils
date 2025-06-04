@@ -27,6 +27,7 @@ const toEqualAddress = wrapComparer(compareAddressForTest);
 const toEqualSlice = wrapComparer(compareSliceForTest);
 
 try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const jestGlobals = require('@jest/globals');
 
     if (jestGlobals)
@@ -36,9 +37,11 @@ try {
             toEqualAddress,
             toEqualSlice,
         });
+    // eslint-disable-next-line no-empty
 } catch (_) {}
 
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     export namespace jest {
         interface Matchers<R> {
             toHaveTransaction(cmp: FlatTransactionComparable): R;

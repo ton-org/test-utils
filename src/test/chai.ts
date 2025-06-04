@@ -12,9 +12,11 @@ function wrapComparer<T>(comparer: (subject: any, cmp: T) => CompareResult) {
 }
 
 try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const chai = require('chai');
 
     if (chai)
+        // eslint-disable-next-line no-undef
         chai.use((chai: Chai.ChaiStatic) => {
             const Assertion = chai.Assertion;
             Assertion.addMethod('transaction', wrapComparer(compareTransactionForTest));
@@ -22,9 +24,11 @@ try {
             Assertion.addMethod('equalAddress', wrapComparer(compareAddressForTest));
             Assertion.addMethod('equalSlice', wrapComparer(compareSliceForTest));
         });
+    // eslint-disable-next-line no-empty
 } catch (_) {}
 
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     export namespace Chai {
         interface Assertion {
             transaction(cmp: FlatTransactionComparable): void;

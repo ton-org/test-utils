@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const base = require('@ton/toolchain');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const tsEslint = require('@ton/toolchain').tsEslint;
 
 module.exports = [
@@ -9,16 +11,11 @@ module.exports = [
         },
         rules: {
             'no-console': 'off',
-            '@typescript-eslint/no-explicit-any': 'warn',
-        },
-    },
-    {
-        files: ['src/test/jest.ts', 'src/test/chai.ts'],
-        rules: {
-            'no-undef': 'off',
-            'no-empty': 'off',
-            '@typescript-eslint/no-require-imports': 'off',
-            '@typescript-eslint/no-namespace': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-require-imports': 'warn',
+            '@typescript-eslint/no-namespace': 'warn',
+            'no-undef': 'warn',
+            'no-empty': 'warn',
         },
     },
 ];
