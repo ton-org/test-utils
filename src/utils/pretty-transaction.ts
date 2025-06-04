@@ -1,21 +1,22 @@
-import errors from "../errors.json";
-import { flattenTransaction, FlatTransaction } from "../test/transaction";
-import { contractsMeta } from "./ContractsMeta";
-import { Address, Transaction } from "@ton/core";
+import { Address, Transaction } from '@ton/core';
+
+import errors from '../errors.json';
+import { flattenTransaction, FlatTransaction } from '../test/transaction';
+import { contractsMeta } from './ContractsMeta';
 
 type PrettifiedProps = {
     failReason?: FailReason;
-    from?: string
-    to?: string
-    on?: string
-    op?: string
-}
+    from?: string;
+    to?: string;
+    on?: string;
+    op?: string;
+};
 
 export type PrettyTransaction = Omit<FlatTransaction, keyof PrettifiedProps> & PrettifiedProps;
 
 export type FailReason = {
     message: string;
-}
+};
 
 const typedErrors: Record<string, FailReason> = errors;
 
@@ -47,7 +48,7 @@ function prettifyOpcode(address: Address | undefined, op: number | undefined): s
         return op.toString();
     }
 
-    const methodType = meta.abi.types.find(type => type.header === op);
+    const methodType = meta.abi.types.find((type) => type.header === op);
 
     let label = op.toString();
     if (methodType) {
@@ -87,6 +88,6 @@ export function prettifyTransaction(tx: Transaction): PrettyTransaction {
         to: prettifyAddress(flatTx.to),
         from: prettifyAddress(flatTx.from),
         on: prettifyAddress(flatTx.on),
-        op: prettifyOpcode(flatTx.to, flatTx.op)
-    }
+        op: prettifyOpcode(flatTx.to, flatTx.op),
+    };
 }
