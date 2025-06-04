@@ -1,10 +1,10 @@
-import { Address, ContractABI } from "@ton/core";
+import { Address, ContractABI } from '@ton/core';
 
 export type ContractMeta = {
     wrapperName?: string;
     abi?: ContractABI | null;
     treasurySeed?: string;
-}
+};
 
 export class ContractsMeta {
     protected contractsMeta = new Map<string, ContractMeta>();
@@ -19,7 +19,7 @@ export class ContractsMeta {
 
     upsert(key: Address, value: Partial<ContractMeta>) {
         const oldValue = this.contractsMeta.get(this.addressToKey(key));
-        this.contractsMeta.set(this.addressToKey(key), {...(oldValue ?? {}), ...value});
+        this.contractsMeta.set(this.addressToKey(key), { ...(oldValue ?? {}), ...value });
     }
 
     clear() {

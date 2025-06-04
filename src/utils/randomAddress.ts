@@ -1,9 +1,9 @@
-import { Address } from "@ton/core";
+import { Address } from '@ton/core';
 
 export function randomAddress(workchain = 0): Address {
-    const b = Buffer.alloc(32)
+    const b = Buffer.alloc(32);
     for (let i = 0; i < 32; i++) {
-        b[i] = Math.floor(Math.random() * 256)
+        b[i] = Math.floor(Math.random() * 256);
     }
-    return new Address(workchain, b)
+    return new Address(workchain, b);
 }

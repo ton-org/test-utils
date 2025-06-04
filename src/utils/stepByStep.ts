@@ -1,6 +1,7 @@
-import { Transaction } from "@ton/core";
-import { FlatTransactionComparable, flattenTransaction, compareTransaction } from "../test/transaction";
-import { inspect } from "node-inspect-extracted";
+import { Transaction } from '@ton/core';
+import { inspect } from 'node-inspect-extracted';
+
+import { FlatTransactionComparable, flattenTransaction, compareTransaction } from '../test/transaction';
 
 export async function executeTill<T extends Transaction>(txs: AsyncIterator<T>, match: FlatTransactionComparable) {
     let executed: T[] = [];
@@ -15,7 +16,9 @@ export async function executeTill<T extends Transaction>(txs: AsyncIterator<T>, 
         iterResult = await txs.next();
     }
     if (!found) {
-        throw new Error(`Expected ${inspect(executed.map(x => flattenTransaction(x)))} to contain a transaction that matches pattern ${inspect(match)}`);
+        throw new Error(
+            `Expected ${inspect(executed.map((x) => flattenTransaction(x)))} to contain a transaction that matches pattern ${inspect(match)}`,
+        );
     }
 
     return executed;
