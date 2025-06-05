@@ -191,6 +191,7 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
             };
         } catch (e) {
             if (subject.transactions !== undefined) {
+                // eslint-disable-next-line no-console
                 console.warn(
                     'It seems that a SendMessageResult is being used for this comparison. Please make sure to pass `result.transactions` instead of just `result` into the matcher.',
                 );
