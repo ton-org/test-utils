@@ -43,8 +43,8 @@
   },
   "prettier": "@ton/toolchain/prettier",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --max-warnings 0 --fix",
     "test": "jest",
     "build": "rm -rf dist && tsc"
   },

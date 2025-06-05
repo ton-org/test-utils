@@ -116,6 +116,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
     };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function compareValue(a: any, b: any) {
     if (a instanceof Address) {
         if (!(b instanceof Address)) return false;
@@ -143,7 +144,9 @@ export function compareTransaction(tx: FlatTransaction, cmp: FlatTransactionComp
     for (const key in cmp) {
         if (!(key in tx)) throw new Error(`Unknown flat transaction object key ${key}`);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cmpv = (cmp as any)[key];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const txv = (tx as any)[key];
         if (typeof cmpv === 'function') {
             if (!cmpv(txv)) return false;
@@ -155,16 +158,19 @@ export function compareTransaction(tx: FlatTransaction, cmp: FlatTransactionComp
     return true;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function compareTransactionForTest(subject: any, cmp: FlatTransactionComparable): CompareResult {
     if (Array.isArray(subject)) {
         return {
             pass: subject.some((tx) => compareTransaction(flattenTransaction(tx), cmp)),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             posMessage: ((subj: any[], cmp: FlatTransactionComparable) =>
                 `Expected ${inspect(subj.map((tx) => prettifyTransaction(tx)))} to contain a transaction that matches pattern ${inspect(cmp)}`).bind(
                 undefined,
                 subject,
                 cmp,
             ),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             negMessage: ((subj: any[], cmp: FlatTransactionComparable) =>
                 `Expected ${inspect(subj.map((tx) => prettifyTransaction(tx)))} NOT to contain a transaction that matches pattern ${inspect(cmp)}, but it does`).bind(
                 undefined,
@@ -176,12 +182,14 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
         try {
             return {
                 pass: compareTransaction(flattenTransaction(subject), cmp),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 posMessage: ((subj: any, cmp: FlatTransactionComparable) =>
                     `Expected ${inspect(prettifyTransaction(subj))} to match pattern ${inspect(cmp)}`).bind(
                     undefined,
                     subject,
                     cmp,
                 ),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 negMessage: ((subj: any, cmp: FlatTransactionComparable) =>
                     `Expected ${inspect(prettifyTransaction(subj))} NOT to match pattern ${inspect(cmp)}, but it does`).bind(
                     undefined,
@@ -191,6 +199,7 @@ export function compareTransactionForTest(subject: any, cmp: FlatTransactionComp
             };
         } catch (e) {
             if (subject.transactions !== undefined) {
+                // eslint-disable-next-line no-console
                 console.warn(
                     'It seems that a SendMessageResult is being used for this comparison. Please make sure to pass `result.transactions` instead of just `result` into the matcher.',
                 );
