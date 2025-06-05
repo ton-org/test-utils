@@ -4,7 +4,9 @@ import { compareAddressForTest, compareCellForTest, compareSliceForTest } from '
 import { CompareResult } from './interface';
 import { compareTransactionForTest, FlatTransactionComparable } from './transaction';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function wrapComparer<T>(comparer: (subject: any, cmp: T) => CompareResult) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (this: any, cmp: T) {
         const result = comparer(this._obj, cmp);
         this.assert(result.pass, result.posMessage(), result.negMessage());

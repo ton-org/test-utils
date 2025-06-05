@@ -5,6 +5,7 @@ import { FlatTransactionComparable, compareTransactionForTest } from './transact
 import { CompareResult } from './interface';
 import { compareAddressForTest, compareCellForTest, compareSliceForTest } from './comparisons';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function wrapComparer<T>(comparer: (subject: any, cmp: T) => CompareResult): MatcherFunction<[cmp: T]> {
     return function (actual, cmp) {
         const result = comparer(actual, cmp);
