@@ -1,5 +1,5 @@
 type ReverseMap<T extends Record<string, number>> = {
-    [K in keyof T as `${T[K]}`]: K
+    [K in keyof T as `${T[K]}`]: K;
 };
 
 const ExitCodeNumbers = {
@@ -42,14 +42,14 @@ const ExitCodeNumbers = {
     ContractCodeNotFound: 135,
     InvalidStandardAddress: 136,
     NotBasechainAddress: 138,
-    UnrecognizedMessageOpcode: 65535
+    UnrecognizedMessageOpcode: 65535,
 } as const;
 
-const ExitCodeNames = Object.fromEntries(
-    Object.entries(ExitCodeNumbers).map(([k, v]) => [v, k])
-) as ReverseMap<typeof ExitCodeNumbers>;
+const ExitCodeNames = Object.fromEntries(Object.entries(ExitCodeNumbers).map(([k, v]) => [v, k])) as ReverseMap<
+    typeof ExitCodeNumbers
+>;
 
 export const ExitCodes = {
     ...ExitCodeNumbers,
     ...ExitCodeNames,
-}
+};
