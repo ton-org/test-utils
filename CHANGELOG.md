@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `toThrowExitCode` jest matcher and `throwExitCode` chai assertion to validate the `exitCode` of errors thrown from get method calls or external message invocations.
 - Added `ExitCode` enum containing standard exit codes
 - Added -14 exit code mapping
 
