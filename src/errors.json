@@ -35,6 +35,9 @@
   "13": {
     "message": "Out of gas error"
   },
+  "-14": {
+    "message": "Out of gas error"
+  },
   "14": {
     "message": "Virtualization error"
   },
