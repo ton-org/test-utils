@@ -1,7 +1,7 @@
-import { Address, Transaction } from '@ton/core';
+import { Address } from '@ton/core';
 
 import errors from '../errors.json';
-import { flattenTransaction, FlatTransaction } from '../test/transaction';
+import { ExtendedTransaction, flattenTransaction, FlatTransaction } from '../test/transaction';
 import { contractsMeta } from './ContractsMeta';
 
 type PrettifiedProps = {
@@ -80,7 +80,7 @@ function prettifyAddress(address: Address | undefined): string | undefined {
     return `${address.toString()} (${contractLabel})`;
 }
 
-export function prettifyTransaction(tx: Transaction): PrettyTransaction {
+export function prettifyTransaction(tx: ExtendedTransaction): PrettyTransaction {
     const flatTx = flattenTransaction(tx);
     return {
         ...flatTx,
