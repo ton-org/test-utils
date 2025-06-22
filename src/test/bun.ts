@@ -48,7 +48,8 @@ interface TonMatchers<T> {
     toEqualSlice(slice: Slice): T;
 }
 
-// @ts-ignore: Module 'bun:test' is only available in bun environment
+// @ts-expect-error: Module 'bun:test' is only available in bun environment
 declare module 'bun:test' {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface Matchers<T> extends TonMatchers<T> {}
 }
