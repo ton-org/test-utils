@@ -12,6 +12,7 @@ export { contractsMeta, ContractsMeta } from './utils/ContractsMeta';
 
 import './test/jest';
 import './test/chai';
+import './test/bun';
 
 export { prettifyTransaction, PrettyTransaction } from './utils/pretty-transaction';
 
