@@ -1,3 +1,4 @@
+import 'expect';
 import type { MatcherFunction } from 'expect';
 import { Address, Cell, Slice } from '@ton/core';
 
@@ -52,20 +53,28 @@ try {
     // eslint-disable-next-line no-empty
 } catch (_) {}
 
+interface TonMatchers<R> {
+    toHaveTransaction(cmp: FlatTransactionComparable): R;
+    toEqualCell(cell: Cell): R;
+    toEqualAddress(address: Address): R;
+    toEqualSlice(slice: Slice): R;
+
+    /**
+     * @example
+     * await expect(() => blockchain.runGetMethod(contract.address, 'test')).toThrowExitCode(11);
+     */
+    toThrowExitCode(exitCode: number): Promise<R>;
+}
+
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     export namespace jest {
-        interface Matchers<R> {
-            toHaveTransaction(cmp: FlatTransactionComparable): R;
-            toEqualCell(cell: Cell): R;
-            toEqualAddress(address: Address): R;
-            toEqualSlice(slice: Slice): R;
-
-            /**
-             * @example
-             * await expect(() => blockchain.runGetMethod(contract.address, 'test')).toThrowExitCode(11);
-             */
-            toThrowExitCode(exitCode: number): Promise<R>;
-        }
+        interface Matchers<R> extends TonMatchers<R> {}
     }
+}
+
+declare module 'expect' {
+    interface Matchers<R> extends TonMatchers<R> {}
 }
