@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated `README.md` with examples and instructions for using the Bun matchers.
 
+## [0.9.0] - 2025-07-07
+
+### Added
+
+- Added `mode` matcher for transaction
+
 ## [0.8.0] - 2025-06-16
 
 ### Added

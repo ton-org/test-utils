@@ -2,10 +2,20 @@ name: QA
 
 on:
   push:
+    paths-ignore:
+      - '.github/workflows/publish.yml'
+      - '.github/workflows/publish-dev.yml'
+      - '.github/ISSUE_TEMPLATE/*'
+      - '*.md'
     branches:
       - main
       - develop
   pull_request:
+    paths-ignore:
+      - '.github/workflows/publish.yml'
+      - '.github/workflows/publish-dev.yml'
+      - '.github/ISSUE_TEMPLATE/*'
+      - '*.md'
     branches:
       - main
       - develop

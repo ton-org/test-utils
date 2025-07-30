@@ -4,6 +4,10 @@ import { inspect } from 'node-inspect-extracted';
 import { CompareResult } from './interface';
 import { prettifyTransaction } from '../utils/pretty-transaction';
 
+export type ExtendedTransaction = Transaction & {
+    mode?: number;
+};
+
 export type FlatTransaction = {
     from?: Address;
     to?: Address;
@@ -28,6 +32,7 @@ export type FlatTransaction = {
     exitCode?: number;
     actionResultCode?: number;
     success?: boolean;
+    mode?: number;
 };
 
 type WithFunctions<T> = {
@@ -54,7 +59,7 @@ function extractEc(cc: CurrencyCollection): [number, bigint][] {
     return r;
 }
 
-export function flattenTransaction(tx: Transaction): FlatTransaction {
+export function flattenTransaction(tx: ExtendedTransaction): FlatTransaction {
     return {
         lt: tx.lt,
         now: tx.now,
@@ -62,6 +67,7 @@ export function flattenTransaction(tx: Transaction): FlatTransaction {
         oldStatus: tx.oldStatus,
         endStatus: tx.endStatus,
         totalFees: tx.totalFees.coins,
+        mode: tx.mode,
         ...(tx.inMessage
             ? {
                   from: tx.inMessage.info.src instanceof Address ? tx.inMessage.info.src : undefined,
