@@ -1,6 +1,6 @@
 # test-utils
 
-This package contains useful testing utilities, such as unit test matchers (for jest and chai) and other useful functions, such as `randomAddress`.
+This package contains useful testing utilities, such as unit test matchers (for jest, chai, and bun) and other useful functions, such as `randomAddress`.
 
 ## Installation
 
@@ -14,9 +14,41 @@ npm i --save-dev @ton/test-utils
 
 ## Usage
 
-To use the test matchers, just install either jest or chai and import this package like so:
+To use the test matchers, just install either jest, chai, or bun and import this package like so:
 ```typescript
 import "@ton/test-utils";
+```
+
+### Examples
+
+#### Jest
+```typescript
+import { expect } from '@jest/globals';
+import "@ton/test-utils";
+
+test('cell comparison', () => {
+    expect(cell1).toEqualCell(cell2);
+});
+```
+
+#### Chai
+```typescript
+import { expect } from 'chai';
+import "@ton/test-utils";
+
+it('cell comparison', () => {
+    expect(cell1).to.equalCell(cell2);
+});
+```
+
+#### Bun
+```typescript
+import { expect, test } from 'bun:test';
+import "@ton/test-utils";
+
+test('cell comparison', () => {
+    expect(cell1).toEqualCell(cell2);
+});
 ```
 
 ### Transaction matcher notice
