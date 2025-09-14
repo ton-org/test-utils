@@ -1,4 +1,4 @@
-import type { MatcherFunction } from 'expect';
+import type { CustomMatcher, Expect } from 'bun:test';
 import { Address, Cell, Slice } from '@ton/core';
 
 import { FlatTransactionComparable, compareTransactionForTest } from './transaction';
@@ -21,7 +21,7 @@ function extractResult(result: CompareResult) {
 
 function wrapComparer<T>(
     comparer: (subject: unknown, cmp: T) => CompareResult | Promise<CompareResult>,
-): MatcherFunction<[cmp: T]> {
+): CustomMatcher<unknown, [cmp: T]> {
     return function (actual, cmp) {
         const result = comparer(actual, cmp);
         if (result instanceof Promise) {
@@ -42,7 +42,7 @@ try {
     const bunTest = require('bun:test');
 
     if (bunTest && bunTest.expect)
-        bunTest.expect.extend({
+        (bunTest.expect as Expect).extend({
             toHaveTransaction,
             toEqualCell,
             toEqualAddress,
