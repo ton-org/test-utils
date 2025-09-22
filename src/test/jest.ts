@@ -1,4 +1,3 @@
-import 'expect';
 import type { MatcherFunction } from 'expect';
 import { Address, Cell, Slice } from '@ton/core';
 
