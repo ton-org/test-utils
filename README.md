@@ -26,6 +26,7 @@ import "@ton/test-utils";
 import { expect } from '@jest/globals';
 import "@ton/test-utils";
 
+
 test('cell comparison', () => {
     expect(cell1).toEqualCell(cell2);
 });
